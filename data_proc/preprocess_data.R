@@ -5,12 +5,16 @@ require(tsibble)
 require(tempdisagg)
 require(tsbox)
 require(progress)
+require(rprojroot)
 
+
+root <- rprojroot::has_file(".git/index")
 
 # load data
-exmo <- suppressMessages(read_delim("excess-mortality-timeseries.csv")) # excess mortality
-c19 <- suppressMessages(read_delim("owid-covid-data.csv"))              # COVID-19 statistics (includes vacc.)
-st <- suppressMessages(as_tibble(read_delim("covid-stringency-index.csv"))) # Country COVID-19 policy stringency
+exmo <- suppressMessages(read_delim(root$find_file("data_raw", "excess-mortality-timeseries.csv"))) # excess mortality
+c19 <- suppressMessages(read_delim(root$find_file("data_raw", "owid-covid-data.csv")))              # COVID-19 statistics (includes vacc.)
+st <- suppressMessages(read_delim(root$find_file("data_raw", "covid-stringency-index.csv")))        # Country COVID-19 policy stringency
+st <- as_tibble(st)
 
 # select only relevant columns from the c19 data set and scale the country population millions
 c19 %>% select(location, date,
@@ -190,4 +194,5 @@ getCovidDeaths <- function(country, unit = "weekly") {
 
 
 # save data
-save(exmo, c19, getVaccinated, getExcessMortality, getCovidDeaths, file = "input_data.RData")
+save(exmo, c19, st, getVaccinated, getExcessMortality, getCovidDeaths,
+     file = root$find_file("data_proc", "input_data.RData"))

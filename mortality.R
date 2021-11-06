@@ -64,13 +64,15 @@ if (length(plots) > 0) {
 # Plot correlations
 countries_to_plot %>%
   ggplot() +
-  aes(x = R_2^2, y = R_1^2, size = pop_million, col = country_name) +
+  aes(x = R_2, y = R_1, size = pop_million, col = country_name) +
   geom_point() +
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 14)) +
-  xlim(0, 1) + xlab("Correlation of excess deaths and vaccination") +
-  ylim(0, 1) + ylab("Correlation of excess deaths and COVID-19 deaths") +
+  xlim(-1, 1) + 
+  xlab("Correlation of excess deaths and vaccination") +
+  ylim(-1, 1) + 
+  ylab("Correlation of excess deaths and COVID-19 deaths") +
   geom_abline(slope = 1, intercept = 0, col = "black", size = 1, linetype = "dashed") -> p.corr
 print(p.corr)
 

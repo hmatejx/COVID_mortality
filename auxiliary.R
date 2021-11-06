@@ -2,12 +2,16 @@
 
 
 # Function to calculate time series correlations
-# the shift parameter aligns the vaccination & COVID deaths time
-getCorrelation <- function(country, unit = "weekly") {
+getCorrelation <- function(country, unit = "weekly", nonzero = F) {
   
   getExcessMortality(country, unit) -> E
   getVaccinated(country, unit) -> V
   getCovidDeaths(country, unit) -> C
+  
+  if (nonzero) {
+    startvac <- which(V$new_vaccinations_smoothed_per_million > 0)[1]
+    V[startvac:nrow(V), ] -> V
+  }
   
   E %>%
     left_join(C, by = "date") %>%
@@ -18,6 +22,29 @@ getCorrelation <- function(country, unit = "weekly") {
   R2 <- cor(x, use = "na.or.complete")
   
   return(c(R2[1, 2], R2[1, 3]))
+}
+
+
+# Function that finds the best lag between the time series
+getBestLag <- function(country, unit = "weekly") {
+  
+  getExcessMortality(country, unit) -> E
+  getVaccinated(country, unit) -> V
+  getCovidDeaths(country, unit) -> C
+  
+  #startvac <- which(V$new_vaccinations_smoothed_per_million > 0)[1]
+  #V[startvac:nrow(V), ] -> V
+  
+  E %>%
+    left_join(C, by = "date") %>%
+    left_join(V, by = "date") %>%
+    as_tibble() %>%
+    select(!date) -> x
+  
+  res1 <- ccf(x[1], x[2], na.action = na.omit, plot = F)
+  res2 <- ccf(x[1], x[3], na.action = na.omit, plot = F)
+  
+  return(c(res1$lag[which.max(res1$acf)], res2$lag[which.max(res2$acf)]))
 }
 
 
@@ -114,7 +141,7 @@ plotPanel <- function(plots) {
   grid.arrange(grobs = plots,
                bottom = textGrob("Date",
                                  gp = gpar(cex = 1)),
-               left = richtext_grob(text = '<span style="color:red">Deaths per million</span> | <span style="color:blue">Vacc. per thousand</span>',
+               left = richtext_grob(text = '<span style="color:darkgray">Excess deaths</span> | <span style="color:red">COVID deaths/mil</span> | <span style="color:blue">Vaccinations/1000</span>',
                                     gp = gpar(cex = 1),
                                     rot = 90),
                padding = unit(1, "line"))

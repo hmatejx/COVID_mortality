@@ -111,14 +111,14 @@ print(pV.coef)
 
 # Plot excess mortality vs. stringency index
 st %>%
-  #filter(year(Day) == 2021) %>%
+#  filter(year(Day) == 2021) %>%
   group_by(Entity) %>%
   summarize(stringency = quantile(stringency_index, 0.05)) -> x
 
 exmo %>%
   #filter(year == 2021) %>%
   group_by(country_name) %>%
-  summarize(excess = max(excess_deaths / pop_million),
+  summarize(excess = sum(excess_deaths / pop_million),
             time_unit = first(time_unit),
             pop = first(pop_million)) %>%
   mutate(excess = if_else(time_unit == "monthly", excess, 
@@ -130,5 +130,5 @@ xy %>%
   ggplot(aes(x = stringency, y = excess, size = pop)) +
   geom_point() +
   geom_smooth(method = 'lm', mapping = aes(weight = pop)) +
-  xlab("COVID19 stringency index") + 
-  ylab("Highest monthly excess mortality per million")
+  xlab("5th-percentile of COVID19 stringency index") + 
+  ylab("Maximum monthly excess mortality per million")

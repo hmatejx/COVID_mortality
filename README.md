@@ -2,13 +2,13 @@
 
 Latest data for 100 countries below. Decide for yourself, what does the data tell you.
 
-![part1](img/part1.jpg)
+![part1](img/part1.png)
 
-![part2](img/part2.jpg)
+![part2](img/part2.png)
 
-![part3](img/part3.jpg)
+![part3](img/part3.png)
 
-![part4](img/part4.jpg)
+![part4](img/part4.png)
 
 # How to use
 

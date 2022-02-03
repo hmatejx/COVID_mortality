@@ -141,7 +141,7 @@ plotPanel <- function(plots) {
   grid.arrange(grobs = plots,
                bottom = textGrob("Date",
                                  gp = gpar(cex = 1)),
-               left = richtext_grob(text = '<span style="color:darkgray">Excess deaths</span> | <span style="color:red">COVID deaths/mil</span> | <span style="color:blue">Vaccinations/1000</span>',
+               left = richtext_grob(text = '<span style="color:darkgray">Excess deaths/1M</span> | <span style="color:red">COVID deaths/1M</span> | <span style="color:blue">Vaccinations/1k</span> per week',
                                     gp = gpar(cex = 1),
                                     rot = 90),
                padding = unit(1, "line"))

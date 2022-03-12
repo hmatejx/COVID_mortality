@@ -10,6 +10,8 @@ Latest data for 100 countries below. Decide for yourself, what does the data tel
 
 ![part4](img/part4.png)
 
+![part5](img/part5.png)
+
 # How to use
 
 1. Update the data by running `update.R` from the [data_raw](data_raw) subfolder. The country stringency data must be manually downloaded (link and instructions in the source code).

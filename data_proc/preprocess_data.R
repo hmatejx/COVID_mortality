@@ -120,17 +120,22 @@ getExcessMortality <- function(country, unit = "weekly") {
     select(date, excess_deaths_per_million) %>%
     as_tsibble(index = date) -> x
 
+  print(unit)
+  print(tu)
+  
   # We're done
   if (tu == unit) {
     return(x)
-
+ 
   # Disaggregate the time series in case the time unit is < than the data time unit
-  } else if ((unit == "weekly" && (tu == "monthly" || tu == "quarterly")) ||
+  } else if ((unit == "daily" && (tu == "weekly" || tu == "monthly" || tu == "quartrly")) ||
+             (unit == "weekly" && (tu == "monthly" || tu == "quarterly")) ||
              (unit == "monthly" && tu == "quarterly")) {
     x <- ts_df(x)
     suppressMessages(m <- td(x ~ 1, to = unit, method = "denton-cholette"))
     return(
       predict(m) %>%
+  #      mutate(date = time) %>%
         mutate(date = yearweek(time)) %>%
         select(date, value) %>%
         as_tsibble(index = date) %>%

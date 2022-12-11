@@ -10,7 +10,9 @@ getCorrelation <- function(country, unit = "weekly", nonzero = F) {
   
   if (nonzero) {
     startvac <- which(V$new_vaccinations_smoothed_per_million > 0)[1]
-    V[startvac:nrow(V), ] -> V
+    if (!is.na(startvac)) {
+      V[startvac:nrow(V), ] -> V
+    }
   }
   
   E %>%

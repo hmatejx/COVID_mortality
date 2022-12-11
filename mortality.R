@@ -45,7 +45,7 @@ for (country in countries_to_plot$country_name) {
       i <- 0
     }
   }
-  Corr <- getCorrelation(country)
+  Corr <- getCorrelation(country, nonzero = T)
   countries_to_plot$R_1[j] <- Corr[1]
   countries_to_plot$R_2[j] <- Corr[2]
 
